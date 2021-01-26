@@ -17,7 +17,7 @@ from deepscm.arch.medical import Decoder, Encoder
 from deepscm.distributions.transforms.reshape import ReshapeTransform
 from deepscm.distributions.transforms.affine import LowerCholeskyAffine
 
-from deepscm.distributions.deep import DeepMultivariateNormal, DeepIndepNormal, Conv2dIndepNormal, DeepLowRankMultivariateNormal
+from deepscm.distributions.deep import DeepMultivariateNormal, DeepIndepNormal, Conv2dIndepNormal, Conv3dIndepNormal, DeepLowRankMultivariateNormal
 
 import numpy as np
 
@@ -51,11 +51,11 @@ class Lambda(torch.nn.Module):
 class BaseVISEM(BaseSEM):
     context_dim = 0
 
-    def __init__(self, latent_dim: int, logstd_init: float = -5, enc_filters: str = '16,32,64,128', dec_filters: str = '128,64,32,16',
+    def __init__(self, latent_dim: int = 1000, logstd_init: float = -5, enc_filters: str = '16,32,64,128', dec_filters: str = '128,64,32,16',
                  num_convolutions: int = 2, use_upconv: bool = False, decoder_type: str = 'fixed_var', decoder_cov_rank: int = 10, **kwargs):
         super().__init__(**kwargs)
 
-        self.img_shape = (1, 192 // self.downsample, 192 // self.downsample) if self.downsample > 0 else (1, 192, 192)
+        self.img_shape = (1, 64, 64, 64)
 
         self.latent_dim = latent_dim
         self.logstd_init = logstd_init
@@ -74,7 +74,7 @@ class BaseVISEM(BaseSEM):
             output_size=self.img_shape)
 
         if self.decoder_type == 'fixed_var':
-            self.decoder = Conv2dIndepNormal(decoder, 1, 1)
+            self.decoder = Conv3dIndepNormal(decoder, 1, 1)
 
             torch.nn.init.zeros_(self.decoder.logvar_head.weight)
             self.decoder.logvar_head.weight.requires_grad = False
