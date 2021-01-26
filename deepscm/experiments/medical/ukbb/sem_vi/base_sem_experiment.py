@@ -278,7 +278,7 @@ class BaseVISEM(BaseSEM):
     def add_arguments(cls, parser):
         parser = super().add_arguments(parser)
 
-        parser.add_argument('--latent_dim', default=100, type=int, help="latent dimension of model (default: %(default)s)")
+        parser.add_argument('--latent_dim', default=1000, type=int, help="latent dimension of model (default: %(default)s)")
         parser.add_argument('--logstd_init', default=-5, type=float, help="init of logstd (default: %(default)s)")
         parser.add_argument('--enc_filters', default='16,24,32,64,128', type=str, help="number of filters to use (default: %(default)s)")
         parser.add_argument('--dec_filters', default='128,64,32,24,16', type=str, help="number of filters to use (default: %(default)s)")
