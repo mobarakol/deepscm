@@ -400,7 +400,7 @@ class BaseCovariateExperiment(pl.LightningModule):
         obs = {'x': x, 'age': age, 'sex': sex, 'ventricle_volume': ventricle_volume, 'brain_volume': brain_volume}
 
         recon = self.pyro_model.reconstruct(**obs, num_particles=self.hparams.num_sample_particles)
-        self.log_img_grid(tag, torch.cat([x, recon], 0))
+        #self.log_img_grid(tag, torch.cat([x, recon], 0))
         self.logger.experiment.add_scalar(f'{tag}/mse', torch.mean(torch.square(x - recon).sum((1, 2, 3))), self.current_epoch)
 
     def build_counterfactual(self, tag, obs, conditions, absolute=None):
@@ -431,7 +431,7 @@ class BaseCovariateExperiment(pl.LightningModule):
             else:
                 sampled_kdes[name] = {'brain_volume': sampled_brain_volume, 'ventricle_volume': sampled_ventricle_volume}
 
-        self.log_img_grid(tag, torch.cat(imgs, 0))
+        #self.log_img_grid(tag, torch.cat(imgs, 0))
         self.log_kdes(f'{tag}_sampled', sampled_kdes, save_img=True)
 
     def sample_images(self):
@@ -443,11 +443,11 @@ class BaseCovariateExperiment(pl.LightningModule):
             sampled_brain_volume = sample_trace.nodes['brain_volume']['value']
             sampled_ventricle_volume = sample_trace.nodes['ventricle_volume']['value']
 
-            self.log_img_grid('samples', samples.data[:8])
+            #self.log_img_grid('samples', samples.data[:8])
 
             cond_data = {'brain_volume': self.brain_volume_range, 'ventricle_volume': self.ventricle_volume_range, 'z': self.z_range}
             samples, *_ = pyro.condition(self.pyro_model.sample, data=cond_data)(9)
-            self.log_img_grid('cond_samples', samples.data, nrow=3)
+            #self.log_img_grid('cond_samples', samples.data, nrow=3)
 
             obs_batch = self.prep_batch(self.get_batch(self.val_loader))
 
@@ -464,7 +464,7 @@ class BaseCovariateExperiment(pl.LightningModule):
 
             obs_batch = {k: v[:8] for k, v in obs_batch.items()}
 
-            self.log_img_grid('input', obs_batch['x'], save_img=True)
+            #self.log_img_grid('input', obs_batch['x'], save_img=True)
 
             if hasattr(self.pyro_model, 'reconstruct'):
                 self.build_reconstruction(**obs_batch)

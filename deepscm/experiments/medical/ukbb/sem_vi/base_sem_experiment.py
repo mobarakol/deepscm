@@ -55,8 +55,8 @@ class BaseVISEM(BaseSEM):
                  num_convolutions: int = 2, use_upconv: bool = False, decoder_type: str = 'fixed_var', decoder_cov_rank: int = 10, **kwargs):
         super().__init__(**kwargs)
 
-        self.img_shape = (1, 64, 64, 64)
-
+        #self.img_shape = (1, 64, 64, 64)
+        self.img_shape = (1, 32, 32, 32)
         self.latent_dim = latent_dim
         self.logstd_init = logstd_init
 
