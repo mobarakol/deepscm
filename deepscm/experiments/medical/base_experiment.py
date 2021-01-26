@@ -16,6 +16,8 @@ import torch
 import numpy as np
 
 import seaborn as sns
+import matplotlib
+matplotlib.use('pdf')
 import matplotlib.pyplot as plt
 
 import os
@@ -359,7 +361,9 @@ class BaseCovariateExperiment(pl.LightningModule):
     def get_batch(self, loader):
         batch = next(iter(self.val_loader))
         if self.trainer.on_gpu:
-            batch = self.trainer.accelerator_backend.to_device(batch, self.torch_device)
+            for key, value in batch.items():
+                batch[key] = value.to(self.torch_device)
+            #batch = self.trainer.accelerator_backend.to_device(batch, self.torch_device)
         return batch
 
     def log_kdes(self, tag, data, save_img=False):

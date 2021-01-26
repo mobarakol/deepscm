@@ -65,9 +65,10 @@ if __name__ == '__main__':
     print(f'building model with params: {model_params}')
 
     model = model_class(**model_params)
-
-    experiment = exp_class.load_from_checkpoint(checkpoint_path, pyro_model=model)
-
+    #experiment = exp_class.load_from_checkpoint(checkpoint_path, pyro_model=model)
+    experiment = exp_class(argparse.Namespace(**hparams), model)
+    ckpt = torch.load(checkpoint_path, map_location=torch.device('cpu'))
+    experiment.load_state_dict(ckpt['state_dict'])
     print(f'Loaded {experiment.__class__}:\n{experiment}')
 
     trainer.test(experiment)
