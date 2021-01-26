@@ -4,7 +4,7 @@ import numpy as np
 
 
 class Encoder(nn.Module):
-    def __init__(self, num_convolutions=1, filters=(16, 32, 64, 128), latent_dim: int = 128, input_size=(1, 192, 192)):
+    def __init__(self, num_convolutions=1, filters=(16, 32, 64, 128), latent_dim: int = 1000, input_size=(1, 64, 64, 64)):
         super().__init__()
 
         self.num_convolutions = num_convolutions
@@ -16,10 +16,10 @@ class Encoder(nn.Module):
         cur_channels = 1
         for c in filters:
             for _ in range(0, num_convolutions - 1):
-                layers += [nn.Conv2d(cur_channels, c, 3, 1, 1), nn.BatchNorm2d(c), nn.LeakyReLU(.1, inplace=True)]
+                layers += [nn.Conv3d(cur_channels, c, 3, 1, 1), nn.BatchNorm3d(c), nn.LeakyReLU(.1, inplace=True)]
                 cur_channels = c
 
-            layers += [nn.Conv2d(cur_channels, c, 4, 2, 1), nn.BatchNorm2d(c), nn.LeakyReLU(.1, inplace=True)]
+            layers += [nn.Conv3d(cur_channels, c, 4, 2, 1), nn.BatchNorm3d(c), nn.LeakyReLU(.1, inplace=True)]
 
             cur_channels = c
 
@@ -41,7 +41,7 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, num_convolutions=1, filters=(128, 64, 32, 16), latent_dim: int = 128, output_size=(1, 192, 192), upconv=False):
+    def __init__(self, num_convolutions=1, filters=(128, 64, 32, 16), latent_dim: int = 1000, output_size=(1, 64, 64, 64), upconv=False):
         super().__init__()
 
         self.num_convolutions = num_convolutions
@@ -62,20 +62,20 @@ class Decoder(nn.Module):
         cur_channels = filters[0]
         for c in filters[1:]:
             for _ in range(0, num_convolutions - 1):
-                layers += [nn.Conv2d(cur_channels, cur_channels, 3, 1, 1), nn.BatchNorm2d(cur_channels), nn.LeakyReLU(.1, inplace=True)]
+                layers += [nn.Conv3d(cur_channels, cur_channels, 3, 1, 1), nn.BatchNorm3d(cur_channels), nn.LeakyReLU(.1, inplace=True)]
 
             if upconv:
                 layers += [
                     nn.Upsample(scale_factor=2, mode='nearest'),
-                    nn.Conv2d(cur_channels, c, kernel_size=5, stride=1, padding=2)
+                    nn.Conv3d(cur_channels, c, kernel_size=5, stride=1, padding=2)
                 ]
             else:
-                layers += [nn.ConvTranspose2d(cur_channels, c, kernel_size=4, stride=2, padding=1)]
-            layers += [nn.BatchNorm2d(c), nn.LeakyReLU(.1, inplace=True)]
+                layers += [nn.ConvTranspose3d(cur_channels, c, kernel_size=4, stride=2, padding=1)]
+            layers += [nn.BatchNorm3d(c), nn.LeakyReLU(.1, inplace=True)]
 
             cur_channels = c
 
-        layers += [nn.Conv2d(cur_channels, 1, 1, 1)]
+        layers += [nn.Conv3d(cur_channels, 1, 1, 1)]
 
         self.cnn = nn.Sequential(*layers)
 
