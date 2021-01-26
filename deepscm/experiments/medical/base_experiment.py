@@ -202,7 +202,7 @@ class BaseCovariateExperiment(pl.LightningModule):
         pass
 
     def train_dataloader(self):
-        return DataLoader(self.ukbb_train, batch_size=self.train_batch_size, shuffle=True)
+        return DataLoader(self.ukbb_train, batch_size=self.train_batch_size, shuffle=True, drop_last=True)
 
     def val_dataloader(self):
         self.val_loader = DataLoader(self.ukbb_val, batch_size=self.test_batch_size, shuffle=False)
