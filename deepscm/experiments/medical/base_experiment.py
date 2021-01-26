@@ -170,7 +170,7 @@ class BaseCovariateExperiment(pl.LightningModule):
         downsample = None if self.hparams.downsample == -1 else self.hparams.downsample
         train_crop_type = self.hparams.train_crop_type if hasattr(self.hparams, 'train_crop_type') else 'random'
         split_dir = self.hparams.split_dir if hasattr(self.hparams, 'split_dir') else '/vol/biomedic2/np716/data/gemini/ukbb/ventricle_brain/'
-        data_dir = self.hparams.data_dir if hasattr(self.hparams, 'data_dir') else '/vol/biomedic2/bglocker/gemini/UKBB/t0/'
+        data_dir = self.hparams.data_dir if hasattr(self.hparams, 'data_dir') else '/vol/biobank/12579/brain/rigid_to_mni/images'
         self.ukbb_train = UKBBDataset(f'{split_dir}/train.csv', base_path=data_dir, crop_type=train_crop_type, downsample=downsample)  # noqa: E501
         self.ukbb_val = UKBBDataset(f'{split_dir}/val.csv', base_path=data_dir, crop_type='center', downsample=downsample)
         self.ukbb_test = UKBBDataset(f'{split_dir}/test.csv', base_path=data_dir, crop_type='center', downsample=downsample)
