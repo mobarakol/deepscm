@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     for k, v in vars(model_params).items():
         setattr(hparams, k, v)
-
+    lightning_args.num_sanity_val_steps = 0
     trainer = Trainer.from_argparse_args(lightning_args)
 
     model = model_class(**vars(model_params))
