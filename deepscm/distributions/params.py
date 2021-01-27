@@ -5,7 +5,7 @@ from pyro.distributions import Categorical, TorchDistribution
 from torch import nn
 
 from .factorised import Factorised
-from .mixture import Mixture
+#from .mixture import Mixture
 from .mvn import MultivariateNormal
 from .multivariate import MultivariateDistribution
 
@@ -167,20 +167,20 @@ class FactorisedParams(MultivariateParams[Factorised]):
         return Factorised(dist_factors, var_names=self.variable_names)
 
 
-class MixtureParams(MultivariateParams[Mixture]):
-    def __init__(self, mixing: CategoricalParams, components: DistributionParams, var_names=None):
-        batch_shape = _broadcast_shapes(mixing.logits.shape, components.batch_shape)
-        batch_shape = batch_shape[:-1]  # Discard component dimension
-        super().__init__(batch_shape=batch_shape, var_names=var_names)
-        self.mixing = mixing
-        self.components = components
+#class MixtureParams(MultivariateParams[Mixture]):
+    #def __init__(self, mixing: CategoricalParams, components: DistributionParams, var_names=None):
+        #batch_shape = _broadcast_shapes(mixing.logits.shape, components.batch_shape)
+        #batch_shape = batch_shape[:-1]  # Discard component dimension
+        #super().__init__(batch_shape=batch_shape, var_names=var_names)
+        #self.mixing = mixing
+        #self.components = components
 
-    def get_distribution(self) -> Mixture:
-        mixing = self.mixing.get_distribution()
-        components = self.components.get_distribution()
-        if isinstance(components, MultivariateDistribution) and self.variable_names is not None:
-            components.rename(self.variable_names)
-        return Mixture(mixing, components)
+    #def get_distribution(self) -> Mixture:
+        #mixing = self.mixing.get_distribution()
+        #components = self.components.get_distribution()
+        #if isinstance(components, MultivariateDistribution) and self.variable_names is not None:
+            #components.rename(self.variable_names)
+        #return Mixture(mixing, components)
 
 
 if __name__ == '__main__':

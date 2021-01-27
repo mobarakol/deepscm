@@ -7,7 +7,7 @@ from nilearn.image import resample_img
 import torch
 
 class UKBBDataset(Dataset):
-    def __init__(self, csv_path, base_path='/vol/biobank/12579/brain/rigid_to_mni/images', crop_type=None, crop_size=(32, 32, 32), downsample: float = 2.5):#(64, 64, 64)
+    def __init__(self, csv_path, base_path='/vol/biobank/12579/brain/rigid_to_mni/images', crop_type=None, crop_size=(64, 64, 64), downsample: float = 2.5):#(64, 64, 64)
         super().__init__()
         self.csv_path = csv_path
         df = pd.read_csv(csv_path)

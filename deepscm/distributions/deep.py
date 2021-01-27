@@ -5,7 +5,7 @@ from pyro.distributions import (
 )
 from torch import nn
 
-from .params import MixtureParams
+#from .params import MixtureParams
 
 
 class DeepConditional(nn.Module):
@@ -115,17 +115,17 @@ class DeepLowRankMultivariateNormal(DeepConditional):
         return LowRankMultivariateNormal(mean, factors, diag)
 
 
-class MixtureSIN(DeepConditional):
-    def __init__(self, encoder: DeepConditional, mixture_params: MixtureParams):
-        super().__init__()
-        self.encoder = encoder
-        self.mixture_params = mixture_params
+#class MixtureSIN(DeepConditional):
+    #def __init__(self, encoder: DeepConditional, mixture_params: MixtureParams):
+        #super().__init__()
+        #self.encoder = encoder
+        #self.mixture_params = mixture_params
 
-    def predict(self, data) -> TorchDistribution:
-        potentials = self.encoder.predict(data)
-        mixture = self.mixture_params.get_distribution()
-        posteriors = mixture.posterior(potentials)  # q(latents | data)
-        return posteriors
+    #def predict(self, data) -> TorchDistribution:
+        #potentials = self.encoder.predict(data)
+        #mixture = self.mixture_params.get_distribution()
+        #posteriors = mixture.posterior(potentials)  # q(latents | data)
+        #return posteriors
 
 
 class _DeepIndepGamma(DeepConditional):
